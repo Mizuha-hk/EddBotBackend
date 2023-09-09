@@ -6,3 +6,16 @@ Content-Type: application/json
 {
     "Category":"Category1"
 }
+
+###
+
+POST https://localhost:7049/api/Threads
+Content-Type: application/json
+
+{
+    "Category":"Category1",
+    "Channel":"Team1",
+    "Threads":[
+        "product", "frontend", "backend"
+    ]
+}

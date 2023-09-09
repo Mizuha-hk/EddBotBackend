@@ -32,6 +32,8 @@ namespace EddBotBackend
 
             app.MapMkCatReqModelEndpoints(discordBotService);
 
+            app.MapMkThreadsModelEndpoints(discordBotService);
+
             app.Run();
         }
     }

@@ -3,7 +3,7 @@ using Discord.WebSocket;
 
 namespace EddBotBackend.Shared
 {
-    public class DiscordBotService : BackgroundService, IDiscordBotService
+    public class DiscordBotService : BackgroundService
     {
         private DiscordSocketClient _client;
         private readonly IConfiguration _configuration;
@@ -65,6 +65,40 @@ namespace EddBotBackend.Shared
                 await restCategoryChannel.AddPermissionOverwriteAsync(guild.EveryoneRole, new OverwritePermissions(viewChannel: PermValue.Allow));
                 await guild.CreateTextChannelAsync(categoryName, x => x.CategoryId = restCategoryChannel.Id);
             }
+        }
+
+        public async Task<CategoryStatus> CreateThreads(string categoryName, string channelName, List<string> threads)
+        {
+            foreach(var guild in _client.Guilds)
+            {
+                var category = guild.CategoryChannels.FirstOrDefault(x => x.Name == categoryName);
+                if(category == null)
+                {
+                    return CategoryStatus.CategoryNotFound;
+                }
+
+                await guild.CreateTextChannelAsync(channelName, x => x.CategoryId = category.Id);
+                var channel = guild.TextChannels.FirstOrDefault(x => x.Name == channelName);
+
+                if(channel == null)
+                {
+                    return CategoryStatus.CreateChannelFailed;
+                }
+
+                foreach(var thread in threads)
+                {  
+                    await channel.CreateThreadAsync(thread); 
+                }
+            }
+
+            return CategoryStatus.Success;
+        }
+
+        public enum CategoryStatus
+        {
+            Success,
+            CategoryNotFound,
+            CreateChannelFailed,
         }
     }
 }
