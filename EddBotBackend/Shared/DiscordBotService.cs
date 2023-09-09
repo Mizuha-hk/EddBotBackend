@@ -3,7 +3,7 @@ using Discord.WebSocket;
 
 namespace EddBotBackend.Shared
 {
-    public class DiscordBotService : BackgroundService
+    public class DiscordBotService : BackgroundService, IDiscordBotService
     {
         private DiscordSocketClient _client;
         private readonly IConfiguration _configuration;
@@ -24,6 +24,10 @@ namespace EddBotBackend.Shared
                         | GatewayIntents.GuildMessages 
                         | GatewayIntents.GuildMessageReactions
                         | GatewayIntents.MessageContent
+                        | GatewayIntents.GuildMessageTyping
+                        | GatewayIntents.GuildEmojis
+                        | GatewayIntents.GuildMembers
+                        
                 });
 
             _client.Log += LogAsync;
@@ -50,7 +54,17 @@ namespace EddBotBackend.Shared
                 return;
             }
 
-            await m.Channel.SendMessageAsync($"output : {m.Content}");
+            await m.Channel.SendMessageAsync($"Made new Channel : {m.Content}");
+        }
+
+        public async Task CreateCategory(string categoryName)
+        {             
+            foreach(var guild in _client.Guilds)
+            {
+                var restCategoryChannel = await guild.CreateCategoryChannelAsync(categoryName);
+                await restCategoryChannel.AddPermissionOverwriteAsync(guild.EveryoneRole, new OverwritePermissions(viewChannel: PermValue.Allow));
+                await guild.CreateTextChannelAsync(categoryName, x => x.CategoryId = restCategoryChannel.Id);
+            }
         }
     }
 }

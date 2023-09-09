@@ -1,0 +1,8 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+
+POST https://localhost:7049/api/Category
+Content-Type: application/json
+
+{
+    "Category":"Category1"
+}
