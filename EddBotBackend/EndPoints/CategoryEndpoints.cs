@@ -12,9 +12,11 @@ public static class CategoryEndpoints
     {
         var group = routes.MapGroup("/api/Category").WithTags(nameof(MkCatReqModel));
 
-        group.MapPost ("/", async Task (MkCatReqModel model) =>
+        group.MapPost ("/", async Task<Results<Ok<string>, NotFound>> (MkCatReqModel model) =>
         {           
             await discordBotService.CreateCategory(model.Category);
+
+            return TypedResults.Ok("Create Category Success.");
         })
         .WithName("CreateCategory")
         .WithOpenApi();
