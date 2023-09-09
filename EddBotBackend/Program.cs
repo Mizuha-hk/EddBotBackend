@@ -34,6 +34,8 @@ namespace EddBotBackend
 
             app.MapMkThreadsModelEndpoints(discordBotService);
 
+            app.MapGet("/", () => TypedResults.Ok());
+
             app.Run();
         }
     }
