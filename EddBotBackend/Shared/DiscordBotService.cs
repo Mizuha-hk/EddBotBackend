@@ -65,7 +65,7 @@ namespace EddBotBackend.Shared
                 await restCategoryChannel.AddPermissionOverwriteAsync(guild.EveryoneRole, new OverwritePermissions(viewChannel: PermValue.Allow));
                 var channel = await guild.CreateTextChannelAsync(categoryName, x => x.CategoryId = restCategoryChannel.Id);
                 var message = await channel.SendMessageAsync($"Welcome to **{categoryName}**.\r\n Adding reaction below, you can add this event role.\r\n");
-                //await message.AddReactionAsync(new Emoji(""));
+                await message.AddReactionAsync(new Emoji("\uD83C\uDDE6"));
                 
             }
         }
