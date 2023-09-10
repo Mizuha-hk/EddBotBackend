@@ -32,9 +32,19 @@ namespace EddBotBackend.Shared
 
             _client.Log += LogAsync;
             _client.MessageReceived += MessageReceivedAsync;
+            //_client.ReactionAdded += ReactionAddedAsync;
             await _client.LoginAsync(TokenType.Bot, Token);
             await _client.StartAsync();
         }
+
+        /*private async Task ReactionAddedAsync(Cacheable<IUserMessage, ulong> message, Cacheable<IMessageChannel, ulong> channel, SocketReaction reaction)
+        {
+            var user = reaction.User.Value;
+            if (user.IsBot)
+            {
+                return;
+            }
+        }*/
 
         public override async Task StopAsync(CancellationToken token)
         {
@@ -54,7 +64,10 @@ namespace EddBotBackend.Shared
                 return;
             }
 
-            await m.Channel.SendMessageAsync($"Made new Channel : {m.Content}");
+            if(m.Content.StartsWith("!"))
+            {
+                await m.Channel.SendMessageAsync($"Output : {m.Content}");
+            }
         }
 
         public async Task CreateCategory(string categoryName)
@@ -64,9 +77,7 @@ namespace EddBotBackend.Shared
                 var restCategoryChannel = await guild.CreateCategoryChannelAsync(categoryName);
                 await restCategoryChannel.AddPermissionOverwriteAsync(guild.EveryoneRole, new OverwritePermissions(viewChannel: PermValue.Allow));
                 var channel = await guild.CreateTextChannelAsync(categoryName, x => x.CategoryId = restCategoryChannel.Id);
-                var message = await channel.SendMessageAsync($"Welcome to **{categoryName}**.\r\n Adding reaction below, you can add this event role.\r\n");
-                await message.AddReactionAsync(new Emoji("\uD83C\uDDE6"));
-                
+                var message = await channel.SendMessageAsync($"Welcome to **{categoryName}**.\r\n");
             }
         }
 

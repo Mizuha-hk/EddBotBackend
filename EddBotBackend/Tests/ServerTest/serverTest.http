@@ -3,7 +3,7 @@ POST https://eddbotbackend.azurewebsites.net/api/Category
 Content-Type: application/json
 
 {
-    "Category":"Category1"
+    "Category":"Category2"
 }
 
 ###
@@ -12,7 +12,7 @@ POST https://eddbotbackend.azurewebsites.net/api/Threads
 Content-Type: application/json
 
 {
-    "Category":"Category1",
+    "Category":"Category2",
     "Channel":"Team1",
     "Threads":[
         "product", "frontend", "backend"
